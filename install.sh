@@ -124,6 +124,9 @@ installDocker(){
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(. /etc/os-release; echo "$UBUNTU_CODENAME") stable"
         update
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+        sudo groupadd docker
+        sudo usermod -aG docker $USER
+        newgrp docker
 
         echo -e "${GREEN}[INFO] - Docker Instalado${NORMAL}"
     else
