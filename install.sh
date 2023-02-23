@@ -149,7 +149,7 @@ installPHP(){
     if ! dpkg -l | grep -q 'php'; then
         echo -e "${GREEN}[INFO] - Instalando o PHP${NORMAL}"
 
-        sudo add-apt-repository ppa:ondrej/php
+        sudo add-apt-repository ppa:ondrej/php -y
         update
         sudo apt install php8.1 -y
         sudo apt install php8.1-{gd,zip,mysql,oauth,yaml,fpm,mbstring,memcache} -y
