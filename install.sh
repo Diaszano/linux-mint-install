@@ -65,14 +65,20 @@ upgrade(){
 }
 
 system_clean(){
+    echo -e "${GREEN}[INFO] - Limpando ${NORMAL}"
+
     update
     sudo apt autoclean -y
     sudo apt autoremove -y
+
+    echo -e "${GREEN}[INFO] - Limpo ${NORMAL}"
 }
 
 fullUpdate(){
+    echo -e "${GREEN}[INFO] - Atualizando ${NORMAL}"
     update
     upgrade
+    echo -e "${GREEN}[INFO] - Atualizado ${NORMAL}"
 }
 
 installApt(){
@@ -170,7 +176,6 @@ main(){
     echo -e "${BLUE}Por fim a limpagem do sistema!${NORMAL}"
     system_clean
     echo -e "${YELLOW}Tchau e até logo!${NORMAL}"
-
 }
 
 main
