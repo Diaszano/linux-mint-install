@@ -27,5 +27,5 @@ bash -c "$(curl https://raw.githubusercontent.com/Diaszano/linux-mint-install/ma
 
 <h2>📖 Licença</h2>
 
-Este projeto tem a licença **Apache License Version 2.0**. Para saber mais dessa
+Este projeto tem a licença **GPL-3.0 license**. Para saber mais dessa
 licença abra o arquivo **[LICENSE](./LICENSE)**.
