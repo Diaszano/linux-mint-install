@@ -18,6 +18,7 @@ SYSTEM_APPS=(
     htop
     curl 
     wget
+    tmux
     gnupg
     bashtop
     prelink 
@@ -84,9 +85,9 @@ fullUpdate(){
 installApt(){
     echo -e "${GREEN}[INFO] - Baixando os aplicativos via APT${NORMAL}"
 
+    fullUpdate
     for app in ${SYSTEM_APPS[@]}; do
         if ! dpkg -l | grep -q $app; then
-            fullUpdate
             sudo apt install "$app" -y
             echo -e "${GREEN}[INFO] - Foi instalado o programa $app.${NORMAL}"
         else
@@ -100,9 +101,10 @@ installApt(){
 
 installFlatPaks(){
     echo -e "${GREEN}[INFO] - Baixando os aplicativos via FlatPak${NORMAL}"
+
+    fullUpdate
     for app in ${FLATPAK_APPS[@]}; do
         if ! flatpak list | grep -q $app; then
-            fullUpdate
             flatpak install flathub "$app" -y
             echo -e "${GREEN}[INFO] - Foi instalado o programa $app.${NORMAL}"
         else
@@ -117,10 +119,10 @@ installDocker(){
     if ! dpkg -l | grep -q 'docker'; then
         echo -e "${GREEN}[INFO] - Instalando o dockerk${NORMAL}"
 
-        fullUpdate
+        update
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(. /etc/os-release; echo "$UBUNTU_CODENAME") stable"
-        fullUpdate
+        update
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
         echo -e "${GREEN}[INFO] - Docker Instalado${NORMAL}"
@@ -134,11 +136,11 @@ installVscode(){
     if ! dpkg -l | grep -q 'code'; then
         echo -e "${GREEN}[INFO] - Instalando o VScode${NORMAL}"
 
-        fullUpdate
+        update
         curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
         sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
         sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-        fullUpdate
+        update
         sudo apt install code -y
 
         echo -e "${GREEN}[INFO] - VScode Instalado${NORMAL}"
@@ -152,15 +154,28 @@ installPHP(){
     if ! dpkg -l | grep -q 'php'; then
         echo -e "${GREEN}[INFO] - Instalando o PHP${NORMAL}"
 
-        fullUpdate
         sudo add-apt-repository ppa:ondrej/php -y
-        fullUpdate
+        update
         sudo apt install php8.1 -y
         sudo apt install php8.1-{gd,zip,mysql,oauth,yaml,fpm,mbstring,memcache} -y
 
         echo -e "${GREEN}[INFO] - PHP Instalado${NORMAL}"
     else
         echo -e "${ORANGE}[INFO] - O PHP já está instalado.${NORMAL}"
+    fi
+}
+
+installNvm(){
+    if ! dpkg -l | grep -q 'nvm'; then
+        echo -e "${GREEN}[INFO] - Instalando o NVM${NORMAL}"
+
+        update
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+        export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    
+        echo -e "${GREEN}[INFO] - NVM Instalado${NORMAL}"
+    else
+        echo -e "${ORANGE}[INFO] - O NVM já está instalado.${NORMAL}"
     fi
 }
 
@@ -184,6 +199,7 @@ main(){
     installDocker
     installVscode
     installPHP
+    installNvm
     installFlatPaks
     echo -e "${BLUE}Faremos agora as configurações necessárias!${NORMAL}"
     configurationPrelink
