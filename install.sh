@@ -133,7 +133,7 @@ installDocker(){
 }
 
 installVscode(){
-    if ! dpkg -l | grep -q 'code'; then
+    if ! dpkg -l | grep -q 'vscode'; then
         echo -e "${GREEN}[INFO] - Instalando o VScode${NORMAL}"
 
         update
