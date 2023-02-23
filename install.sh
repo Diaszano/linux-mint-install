@@ -86,6 +86,7 @@ installApt(){
 
     for app in ${SYSTEM_APPS[@]}; do
         if ! dpkg -l | grep -q $app; then
+            fullUpdate
             sudo apt install "$app" -y
             echo -e "${GREEN}[INFO] - Foi instalado o programa $app.${NORMAL}"
         else
@@ -101,6 +102,7 @@ installFlatPaks(){
     echo -e "${GREEN}[INFO] - Baixando os aplicativos via FlatPak${NORMAL}"
     for app in ${FLATPAK_APPS[@]}; do
         if ! flatpak list | grep -q $app; then
+            fullUpdate
             flatpak install flathub "$app" -y
             echo -e "${GREEN}[INFO] - Foi instalado o programa $app.${NORMAL}"
         else
@@ -115,10 +117,10 @@ installDocker(){
     if ! dpkg -l | grep -q 'docker'; then
         echo -e "${GREEN}[INFO] - Instalando o dockerk${NORMAL}"
 
-        update
+        fullUpdate
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(. /etc/os-release; echo "$UBUNTU_CODENAME") stable"
-        update
+        fullUpdate
         sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
         echo -e "${GREEN}[INFO] - Docker Instalado${NORMAL}"
@@ -132,10 +134,11 @@ installVscode(){
     if ! dpkg -l | grep -q 'code'; then
         echo -e "${GREEN}[INFO] - Instalando o VScode${NORMAL}"
 
+        fullUpdate
         curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
         sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
         sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-        update
+        fullUpdate
         sudo apt install code -y
 
         echo -e "${GREEN}[INFO] - VScode Instalado${NORMAL}"
@@ -149,8 +152,9 @@ installPHP(){
     if ! dpkg -l | grep -q 'php'; then
         echo -e "${GREEN}[INFO] - Instalando o PHP${NORMAL}"
 
+        fullUpdate
         sudo add-apt-repository ppa:ondrej/php -y
-        update
+        fullUpdate
         sudo apt install php8.1 -y
         sudo apt install php8.1-{gd,zip,mysql,oauth,yaml,fpm,mbstring,memcache} -y
 
@@ -176,17 +180,11 @@ main(){
     echo -e "${BLUE}Mas antes checaremos se tu estás conectado na internet!${NORMAL}"
     checkInternet
     echo -e "${BLUE}Agora faremos as instalações dos teus aplicativos!${NORMAL}"
-    fullUpdate
     installApt
-    fullUpdate
     installDocker
-    fullUpdate
     installVscode
-    fullUpdate
     installPHP
-    fullUpdate
     installFlatPaks
-    fullUpdate
     echo -e "${BLUE}Faremos agora as configurações necessárias!${NORMAL}"
     configurationPrelink
     echo -e "${BLUE}Por fim a limpagem do sistema!${NORMAL}"
