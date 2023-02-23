@@ -132,7 +132,6 @@ installVscode(){
     if ! dpkg -l | grep -q 'code'; then
         echo -e "${GREEN}[INFO] - Instalando o VScode${NORMAL}"
 
-        update
         curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
         sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
         sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
@@ -144,6 +143,21 @@ installVscode(){
         echo -e "${ORANGE}[INFO] - O VScode já está instalado.${NORMAL}"
     fi
 
+}
+
+installPHP(){
+    if ! dpkg -l | grep -q 'php'; then
+        echo -e "${GREEN}[INFO] - Instalando o PHP${NORMAL}"
+
+        sudo add-apt-repository ppa:ondrej/php
+        update
+        sudo apt install php8.1 -y
+        sudo apt install php8.1-{gd,zip,mysql,oauth,yaml,fpm,mbstring,memcache} -y
+
+        echo -e "${GREEN}[INFO] - PHP Instalado${NORMAL}"
+    else
+        echo -e "${ORANGE}[INFO] - O PHP já está instalado.${NORMAL}"
+    fi
 }
 
 configurationPrelink(){
@@ -168,6 +182,8 @@ main(){
     installDocker
     fullUpdate
     installVscode
+    fullUpdate
+    installPHP
     fullUpdate
     installFlatPaks
     fullUpdate
