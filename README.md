@@ -22,7 +22,7 @@ Neste projeto tive como objetivo automatizar as instalações de aplicativos no 
 <h2>🏁 Como executar</h2>
 
 ```shell
-$ bash -c "$(curl https://raw.githubusercontent.com/Diaszano/linux-mint-install/master/install.sh)"
+bash -c "$(curl https://raw.githubusercontent.com/Diaszano/linux-mint-install/master/install.sh)"
 ```
 
 <h2>📖 Licença</h2>
